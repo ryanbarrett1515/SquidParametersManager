@@ -30,3 +30,4 @@ private/
 
 #MACOS
 .DS_Store
+/SquidParametersManagerApp/build/
