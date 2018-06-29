@@ -10,7 +10,7 @@
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.cirdles.squidparametersmanager.SquidParametersManager'
+    ext.mainClass = 'org.cirdles.squidParametersManager.SquidParametersManager'
 }
 
 dependencies {
@@ -21,4 +21,5 @@ dependencies {
     //
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    compile project(":SquidParametersManagerCore")
 }

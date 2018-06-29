@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.cirdles.squidparametersmanager;
+package org.cirdles.squidParametersManager;
 
 import java.io.IOException;
 import javafx.application.Application;
@@ -32,7 +32,7 @@ public class SquidParametersManager extends Application{
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
 
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinHeight(700);
         primaryStage.setMinWidth(800);
         
         Parent root = new AnchorPane();
