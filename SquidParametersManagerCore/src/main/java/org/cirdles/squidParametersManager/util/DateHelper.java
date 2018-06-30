@@ -14,7 +14,9 @@ import java.util.GregorianCalendar;
 public class DateHelper {
     
     public static String getCurrentDate() {
-        return GregorianCalendar.MONTH + "/" + GregorianCalendar.DAY_OF_MONTH + "/" + GregorianCalendar.YEAR;
+        return GregorianCalendar.getInstance().get(GregorianCalendar.MONTH) + 1 //months start at 0
+                + "/" + GregorianCalendar.getInstance().get(GregorianCalendar.DAY_OF_MONTH)
+                + "/" + GregorianCalendar.getInstance().get(GregorianCalendar.YEAR);
     }
     
 }

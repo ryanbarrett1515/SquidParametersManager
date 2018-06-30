@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
 
@@ -85,9 +86,17 @@ public class SquidParametersManagerGUIController implements Initializable {
     private Button okayButton;
     @FXML
     private TextField labNameTextField;
+    @FXML
+    private TextArea physConstReferencesArea;
+    @FXML
+    private TextArea physConstCommentsArea;
+    @FXML
+    private TextArea refMatReferencesArea;
+    @FXML
+    private TextArea refMatCommentsArea;
 
     String laboratoryName;
-    ParametersManager physicalConstantsModel;
+    ParametersManager physConstModel;
     ParametersManager refMatModel;
 
     /**
@@ -95,7 +104,8 @@ public class SquidParametersManagerGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        physicalConstantsModel = new ParametersManager();
+        laboratoryName = "";
+        physConstModel = new ParametersManager();
         refMatModel = new ParametersManager();
         setUpPhysicalConstantsModelsTextFields();
         setUpReferenceMaterialTextFields();
@@ -103,40 +113,61 @@ public class SquidParametersManagerGUIController implements Initializable {
     }
 
     private void setUpPhysicalConstantsModelsTextFields() {
+        physConstModelName.setText(physConstModel.getModelName());
         physConstModelName.setOnKeyTyped(value -> {
-            physicalConstantsModel.setModelName(physConstModelName.getText());
-        }
-        );
+            physConstModel.setModelName(physConstModelName.getText());
+        });
+        physConstLabName.setText(physConstModel.getLabName());
         physConstLabName.setOnKeyTyped(value -> {
-            physicalConstantsModel.setLabName(physConstLabName.getText());
-        }
-        );
+            physConstModel.setLabName(physConstLabName.getText());
+        });
+        physConstDateCertified.setText(physConstModel.getDateCertified());
         physConstDateCertified.setOnKeyTyped(value -> {
-            physicalConstantsModel.setModelName(physConstDateCertified.getText());
-        }
-        );
+            physConstModel.setModelName(physConstDateCertified.getText());
+        });
+        physConstVersion.setText(physConstModel.getVersion());
         physConstVersion.setOnKeyTyped(value -> {
-            physicalConstantsModel.setModelName(physConstVersion.getText());
-        }
-        );
+            physConstModel.setModelName(physConstVersion.getText());
+        });
+        physConstReferencesArea.setText(physConstModel.getReferences());
+        physConstReferencesArea.setOnKeyTyped(value -> {
+            physConstModel.setReferences(physConstReferencesArea.getText());
+        });
+        physConstCommentsArea.setText(physConstModel.getComments());
+        physConstCommentsArea.setOnKeyTyped(value -> {
+            physConstModel.setComments(physConstCommentsArea.getText());
+        });
     }
 
     private void setUpReferenceMaterialTextFields() {
+        refMatModelName.setText(refMatModel.getModelName());
         refMatModelName.setOnKeyTyped(value -> {
             refMatModel.setModelName(refMatModelName.getText());
         });
+        refMatLabName.setText(refMatModel.getLabName());
         refMatLabName.setOnKeyTyped(value -> {
             refMatModel.setLabName(refMatModel.getLabName());
         });
+        refMatDateCertified.setText(refMatModel.getDateCertified());
         refMatDateCertified.setOnKeyTyped(value -> {
             refMatModel.setDateCertified(refMatDateCertified.getText());
         });
-        refMatModelName.setOnKeyTyped(Value -> {
+        refMatVersion.setText(refMatModel.getVersion());
+        refMatVersion.setOnKeyTyped(value -> {
             refMatModel.setVersion(refMatVersion.getText());
+        });
+        refMatReferencesArea.setText(refMatModel.getReferences());
+        refMatReferencesArea.setOnKeyTyped(value -> {
+            refMatModel.setReferences(refMatReferencesArea.getText());
+        });
+        refMatCommentsArea.setText(refMatModel.getComments());
+        refMatCommentsArea.setOnKeyTyped(value -> {
+            refMatModel.setComments(refMatCommentsArea.getText());
         });
     }
 
     private void setUpLaboratoryName() {
+        labNameTextField.setText(laboratoryName);
         labNameTextField.setOnKeyTyped(value -> {
             laboratoryName = labNameTextField.getText();
         });

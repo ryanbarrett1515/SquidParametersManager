@@ -20,17 +20,16 @@ public class ParametersManager implements
     protected String labName;
     protected String version;
     protected String dateCertified;
-    
-    @Override
-    public int compareTo(ParametersManager o) {
-        return modelName.compareTo(o.getModelName());
-    }
-    
-public ParametersManager() {
-    modelName = "";
-    labName = "";
-    version = "";
-    dateCertified = DateHelper.getCurrentDate();
+    protected String comments;
+    protected String references;
+
+    public ParametersManager() {
+        modelName = "";
+        labName = "";
+        version = "";
+        dateCertified = DateHelper.getCurrentDate();
+        comments = "";
+        references = "";
     }
 
     public ParametersManager(String modelName, String labName, String version, String dateCertified) {
@@ -38,10 +37,48 @@ public ParametersManager() {
         this.labName = labName;
         this.version = version;
         this.dateCertified = dateCertified;
+        comments = "";
+        references = "";
     }
 
-    
-    
+    public ParametersManager(String modelName, String labName, String version, String dateCertified, String comments, String references) {
+        this.modelName = modelName;
+        this.labName = labName;
+        this.version = version;
+        this.dateCertified = dateCertified;
+        this.comments = comments;
+        this.references = references;
+    }
+
+    @Override
+    public int compareTo(ParametersManager o) {
+        return modelName.compareTo(o.getModelName());
+    }
+
+    public boolean equals(Object o) {
+        boolean retVal = (o instanceof ParametersManager);
+        if (retVal && ((ParametersManager) o).getModelName().compareTo(modelName) != 0) {
+            retVal = false;
+        }
+        return retVal;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getReferences() {
+        return references;
+    }
+
+    public void setReferences(String references) {
+        this.references = references;
+    }
+
     public String getModelName() {
         return modelName;
     }

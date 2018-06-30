@@ -8,10 +8,11 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="657.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squidParametersManager.SquidParametersManagerGUIController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squidParametersManager.SquidParametersManagerGUIController">
     <children>
         <TabPane layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
             <tabs>
@@ -51,7 +52,7 @@
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="390.0" layoutY="57.0" text="Version:" />
                                 <Label fx:id="physConstIsEditableLabel" layoutX="579.0" layoutY="57.0" />
-                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="192.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="236.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data" />
                                         <Tab text="References" />
@@ -61,13 +62,20 @@
                                             </content>
                                         </Tab>
                                         <Tab text="Ref and Comment">
-                                            <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                             <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TextArea fx:id="physConstReferencesArea" layoutX="7.0" layoutY="14.0" prefHeight="75.0" prefWidth="643.0" promptText="add references here" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="125.0" />
+                                                        <TextArea fx:id="physConstCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="75.0" prefWidth="640.0" promptText="add comments here" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0" />
+                                                        <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="15.0" layoutY="76.0" text="References" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="105.0" />
+                                                    </children>
+                                                </AnchorPane>
                                             </content>
                                         </Tab>
                                     </tabs>
                                 </TabPane>
-                                <TabPane layoutX="14.0" layoutY="312.0" prefHeight="200.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="13.600000000000023" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="312.0">
+                                <TabPane layoutX="14.0" layoutY="312.0" prefHeight="214.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="370.0">
                                     <tabs>
                                         <Tab text="Correlations" />
                                         <Tab text="Covariances" />
@@ -113,18 +121,28 @@
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="390.0" layoutY="57.0" text="Version:" />
                                 <Label fx:id="refMatIsEditable" layoutX="579.0" layoutY="57.0" />
-                                <TabPane layoutX="14.0" layoutY="112.0" prefHeight="200.0" prefWidth="635.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+                                <TabPane layoutX="14.0" layoutY="112.0" prefHeight="235.0" prefWidth="635.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data" />
                                         <Tab text="Concentrations" />
                                         <Tab text="Specs">
                                         </Tab>
                                         <Tab text="Ref and Comment">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TextArea fx:id="refMatReferencesArea" layoutX="7.0" layoutY="14.0" prefHeight="75.0" prefWidth="643.0" promptText="add references here" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="125.0" />
+                                                        <TextArea fx:id="refMatCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="75.0" prefWidth="640.0" promptText="add comments here" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0" />
+                                                        <Label layoutX="14.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="15.0" layoutY="76.0" text="References" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="105.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
                                         </Tab>
                                         <Tab text="Apparent Dates" />
                                     </tabs>
                                 </TabPane>
-                                <TabPane layoutX="14.0" layoutY="312.0" prefHeight="200.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="13.600000000000023" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="312.0">
+                                <TabPane layoutX="14.0" layoutY="320.0" prefHeight="214.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="370.0">
                                     <tabs>
                                         <Tab text="Correlations" />
                                         <Tab text="Covariances" />
@@ -136,8 +154,8 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <Button fx:id="okayButton" layoutX="-1.0" layoutY="492.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="658.0" text="Okay" AnchorPane.bottomAnchor="-1.6000000000000227" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-0.39999999999997726" />
-        <TextField fx:id="labNameTextField" layoutX="88.0" layoutY="2.0" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="88.0" AnchorPane.rightAnchor="6.600000000000023" AnchorPane.topAnchor="2.0" />
-        <Label layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="14.0" />
+        <Button fx:id="okayButton" layoutX="-1.0" layoutY="492.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="658.0" text="Okay" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+        <TextField fx:id="labNameTextField" layoutX="88.0" layoutY="2.0" prefHeight="26.0" prefWidth="562.0" AnchorPane.leftAnchor="88.0" AnchorPane.rightAnchor="6.600000000000023" AnchorPane.topAnchor="10.0" />
+        <Label layoutX="14.0" layoutY="5.0" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="15.0" />
     </children>
 </AnchorPane>
