@@ -13,8 +13,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.TextAlignment;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
 
 /**
@@ -23,7 +27,7 @@ import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
  * @author ryanb
  */
 public class SquidParametersManagerGUIController implements Initializable {
-
+    
     @FXML
     private MenuItem physConstImpXML;
     @FXML
@@ -94,7 +98,17 @@ public class SquidParametersManagerGUIController implements Initializable {
     private TextArea refMatReferencesArea;
     @FXML
     private TextArea refMatCommentsArea;
-
+    @FXML
+    private TableView<?> physConstDataTable;
+    @FXML
+    private Label physConstDataLabel;
+    @FXML
+    private TableView<?> refMatDataTable;
+    @FXML
+    private Label refMatDataLabel;
+    @FXML
+    private ScrollPane referencesScrollPane;
+    
     String laboratoryName;
     ParametersManager physConstModel;
     ParametersManager refMatModel;
@@ -111,64 +125,90 @@ public class SquidParametersManagerGUIController implements Initializable {
         setUpReferenceMaterialTextFields();
         setUpLaboratoryName();
     }
-
+    
+    public void setUpReferences() {
+        ValueModel[] models = physConstModel.getValues();
+        int currHeight = 0;
+        for (int i = 0; i < models.length; i++) {
+            ValueModel mod = models[i];
+            
+            Label lab = new Label(mod.getName());
+            referencesScrollPane.getChildrenUnmodifiable().add(lab);
+            lab.setLayoutY(currHeight);
+            lab.setLayoutX(10);
+            lab.setTextAlignment(TextAlignment.RIGHT);
+            lab.setPrefWidth(75);
+            
+            TextField text = new TextField(mod.getReference());
+            referencesScrollPane.getChildrenUnmodifiable().add(text);
+            text.setLayoutY(currHeight);
+            text.setLayoutX(90);
+            text.setPrefWidth(100);
+            text.setOnKeyReleased(value -> {
+                mod.setReference(text.getText());
+            });
+            
+            currHeight += text.getHeight();
+        }
+    }
+    
     private void setUpPhysicalConstantsModelsTextFields() {
         physConstModelName.setText(physConstModel.getModelName());
-        physConstModelName.setOnKeyTyped(value -> {
+        physConstModelName.setOnKeyReleased(value -> {
             physConstModel.setModelName(physConstModelName.getText());
         });
         physConstLabName.setText(physConstModel.getLabName());
-        physConstLabName.setOnKeyTyped(value -> {
+        physConstLabName.setOnKeyReleased(value -> {
             physConstModel.setLabName(physConstLabName.getText());
         });
         physConstDateCertified.setText(physConstModel.getDateCertified());
-        physConstDateCertified.setOnKeyTyped(value -> {
+        physConstDateCertified.setOnKeyReleased(value -> {
             physConstModel.setModelName(physConstDateCertified.getText());
         });
         physConstVersion.setText(physConstModel.getVersion());
-        physConstVersion.setOnKeyTyped(value -> {
+        physConstVersion.setOnKeyReleased(value -> {
             physConstModel.setModelName(physConstVersion.getText());
         });
         physConstReferencesArea.setText(physConstModel.getReferences());
-        physConstReferencesArea.setOnKeyTyped(value -> {
+        physConstReferencesArea.setOnKeyReleased(value -> {
             physConstModel.setReferences(physConstReferencesArea.getText());
         });
         physConstCommentsArea.setText(physConstModel.getComments());
-        physConstCommentsArea.setOnKeyTyped(value -> {
+        physConstCommentsArea.setOnKeyReleased(value -> {
             physConstModel.setComments(physConstCommentsArea.getText());
         });
     }
-
+    
     private void setUpReferenceMaterialTextFields() {
         refMatModelName.setText(refMatModel.getModelName());
-        refMatModelName.setOnKeyTyped(value -> {
+        refMatModelName.setOnKeyReleased(value -> {
             refMatModel.setModelName(refMatModelName.getText());
         });
         refMatLabName.setText(refMatModel.getLabName());
-        refMatLabName.setOnKeyTyped(value -> {
+        refMatLabName.setOnKeyReleased(value -> {
             refMatModel.setLabName(refMatModel.getLabName());
         });
         refMatDateCertified.setText(refMatModel.getDateCertified());
-        refMatDateCertified.setOnKeyTyped(value -> {
+        refMatDateCertified.setOnKeyReleased(value -> {
             refMatModel.setDateCertified(refMatDateCertified.getText());
         });
         refMatVersion.setText(refMatModel.getVersion());
-        refMatVersion.setOnKeyTyped(value -> {
+        refMatVersion.setOnKeyReleased(value -> {
             refMatModel.setVersion(refMatVersion.getText());
         });
         refMatReferencesArea.setText(refMatModel.getReferences());
-        refMatReferencesArea.setOnKeyTyped(value -> {
+        refMatReferencesArea.setOnKeyReleased(value -> {
             refMatModel.setReferences(refMatReferencesArea.getText());
         });
         refMatCommentsArea.setText(refMatModel.getComments());
-        refMatCommentsArea.setOnKeyTyped(value -> {
+        refMatCommentsArea.setOnKeyReleased(value -> {
             refMatModel.setComments(refMatCommentsArea.getText());
         });
     }
-
+    
     private void setUpLaboratoryName() {
         labNameTextField.setText(laboratoryName);
-        labNameTextField.setOnKeyTyped(value -> {
+        labNameTextField.setOnKeyReleased(value -> {
             laboratoryName = labNameTextField.getText();
         });
     }

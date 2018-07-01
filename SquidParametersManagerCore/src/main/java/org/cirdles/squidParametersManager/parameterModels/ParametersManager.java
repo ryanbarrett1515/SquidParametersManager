@@ -6,6 +6,7 @@
 package org.cirdles.squidParametersManager.parameterModels;
 
 import java.io.Serializable;
+import org.cirdles.squidParametersManager.ValueModel;
 import org.cirdles.squidParametersManager.util.DateHelper;
 
 /**
@@ -22,6 +23,7 @@ public class ParametersManager implements
     protected String dateCertified;
     protected String comments;
     protected String references;
+    protected ValueModel[] values;
 
     public ParametersManager() {
         modelName = "";
@@ -30,24 +32,52 @@ public class ParametersManager implements
         dateCertified = DateHelper.getCurrentDate();
         comments = "";
         references = "";
+        values = new ValueModel[0];
     }
 
-    public ParametersManager(String modelName, String labName, String version, String dateCertified) {
+    public ParametersManager(String modelName) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
         this.dateCertified = dateCertified;
         comments = "";
         references = "";
+        values = new ValueModel[0];
     }
 
-    public ParametersManager(String modelName, String labName, String version, String dateCertified, String comments, String references) {
+    public ParametersManager(String modelName, String labName,
+            String version, String dateCertified) {
+        this.modelName = modelName;
+        this.labName = labName;
+        this.version = version;
+        this.dateCertified = dateCertified;
+        comments = "";
+        references = "";
+        values = new ValueModel[0];
+    }
+
+    public ParametersManager(String modelName, String labName,
+            String version, String dateCertified, String comments,
+            String references) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
         this.dateCertified = dateCertified;
         this.comments = comments;
         this.references = references;
+        values = new ValueModel[0];
+    }
+
+    public ParametersManager(String modelName, String labName, String version,
+            String dateCertified, String comments, String references,
+            ValueModel[] values) {
+        this.modelName = modelName;
+        this.labName = labName;
+        this.version = version;
+        this.dateCertified = dateCertified;
+        this.comments = comments;
+        this.references = references;
+        this.values = values;
     }
 
     @Override
@@ -56,8 +86,9 @@ public class ParametersManager implements
     }
 
     public boolean equals(Object o) {
-        boolean retVal = (o instanceof ParametersManager);
-        if (retVal && ((ParametersManager) o).getModelName().compareTo(modelName) != 0) {
+        boolean retVal = o instanceof ParametersManager;
+        if (retVal && ((ParametersManager) o).
+                getModelName().compareTo(modelName) != 0) {
             retVal = false;
         }
         return retVal;
@@ -109,6 +140,14 @@ public class ParametersManager implements
 
     public void setDateCertified(String dateCertified) {
         this.dateCertified = dateCertified;
+    }
+
+    public ValueModel[] getValues() {
+        return values;
+    }
+
+    public void setValues(ValueModel[] values) {
+        this.values = values;
     }
 
 }
