@@ -39,7 +39,8 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         oneSigmaSys = null;
     }
 
-    public ValueModel(String name, String uncertaintyType, BigDecimal value, BigDecimal oneSigma, BigDecimal oneSigmaSys) {
+    public ValueModel(String name, String uncertaintyType, BigDecimal value,
+            BigDecimal oneSigma, BigDecimal oneSigmaSys) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.value = value;
@@ -48,7 +49,8 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         this.reference = "";
     }
 
-    public ValueModel(String name, String uncertaintyType, String reference, BigDecimal value, BigDecimal oneSigma, BigDecimal oneSigmaSys) {
+    public ValueModel(String name, String uncertaintyType, String reference,
+            BigDecimal value, BigDecimal oneSigma, BigDecimal oneSigmaSys) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.reference = reference;

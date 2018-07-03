@@ -6,6 +6,7 @@
 package org.cirdles.squidParametersManager.parameterModels;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import org.cirdles.squidParametersManager.ValueModel;
 import org.cirdles.squidParametersManager.util.DateHelper;
 
@@ -32,7 +33,17 @@ public class ParametersManager implements
         dateCertified = DateHelper.getCurrentDate();
         comments = "";
         references = "";
-        values = new ValueModel[0];
+        values = new ValueModel[5];
+        values[0] = new ValueModel("test", "test", "test", new BigDecimal(0),
+        new BigDecimal(0), new BigDecimal(0));
+        values[1] = new ValueModel("test", "test", "test", new BigDecimal(0),
+        new BigDecimal(0), new BigDecimal(0));
+        values[2] = new ValueModel("test", "test", "test", new BigDecimal(0),
+        new BigDecimal(0), new BigDecimal(0));
+        values[3] = new ValueModel("test", "test", "test", new BigDecimal(0),
+        new BigDecimal(0), new BigDecimal(0));
+        values[4] = new ValueModel("test", "test", "test", new BigDecimal(0),
+        new BigDecimal(0), new BigDecimal(0));
     }
 
     public ParametersManager(String modelName) {
@@ -56,9 +67,8 @@ public class ParametersManager implements
         values = new ValueModel[0];
     }
 
-    public ParametersManager(String modelName, String labName,
-            String version, String dateCertified, String comments,
-            String references) {
+    public ParametersManager(String modelName, String labName, String version, 
+            String dateCertified, String comments, String references) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
