@@ -19,8 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -116,7 +114,9 @@ public class SquidParametersManagerGUIController implements Initializable {
     private TextArea molarMassesTextArea;
     @FXML
     private AnchorPane referencesPane;
-
+    @FXML
+    private TableView<DataModel> refMatConcentrationsTable;
+    
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
@@ -137,13 +137,14 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         setUpReferenceMaterialTextFields();
         setUpRefMatData();
+        setUpConcentrations();
 
         setUpLaboratoryName();
     }
 
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
-        
+
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<DataModel, String>("name"));
@@ -151,7 +152,7 @@ public class SquidParametersManagerGUIController implements Initializable {
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(
                 new PropertyValueFactory<DataModel, String>("value"));
-        
+
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(
                 new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
@@ -161,7 +162,6 @@ public class SquidParametersManagerGUIController implements Initializable {
                 new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
 
         physConstDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
-        
 
         final ObservableList<DataModel> obList = FXCollections.observableArrayList();
         for (int i = 0; i < physConstModel.getValues().length; i++) {
@@ -171,13 +171,13 @@ public class SquidParametersManagerGUIController implements Initializable {
             obList.add(mod);
         }
         physConstDataTable.setItems(obList);
-        
+
         physConstDataTable.refresh();
     }
 
     private void setUpRefMatData() {
         refMatDataTable.getColumns().clear();
-        
+
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<DataModel, String>("name"));
@@ -204,7 +204,40 @@ public class SquidParametersManagerGUIController implements Initializable {
             obList.add(mod);
         }
         refMatDataTable.setItems(obList);
-        
+
+        refMatDataTable.refresh();
+    }
+    
+    private void setUpConcentrations() {
+        refMatConcentrationsTable.getColumns().clear();
+
+        TableColumn nameCol = new TableColumn("name");
+        nameCol.setCellValueFactory(
+                new PropertyValueFactory<DataModel, String>("name"));
+
+        TableColumn valCol = new TableColumn("value");
+        valCol.setCellValueFactory(
+                new PropertyValueFactory<DataModel, String>("value"));
+
+        TableColumn absCol = new TableColumn("1σ ABS");
+        absCol.setCellValueFactory(
+                new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
+
+        TableColumn pctCol = new TableColumn("1σ PCT");
+        pctCol.setCellValueFactory(
+                new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
+
+        refMatConcentrationsTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+
+        final ObservableList<DataModel> obList = FXCollections.observableArrayList();
+        for (int i = 0; i < refMatModel.getConcentrations().length; i++) {
+            ValueModel valMod = refMatModel.getConcentrations()[i];
+            DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
+                    valMod.getOneSigma(), valMod.getOneSigmaSys());
+            obList.add(mod);
+        }
+        refMatDataTable.setItems(obList);
+
         refMatDataTable.refresh();
     }
 
@@ -224,28 +257,28 @@ public class SquidParametersManagerGUIController implements Initializable {
     }
 
     private void setUpReferences() {
-            ValueModel[] models = physConstModel.getValues();
-            int currHeight = 0;
-            for (int i = 0; i < models.length; i++) {
-                ValueModel mod = models[i];
+        ValueModel[] models = physConstModel.getValues();
+        int currHeight = 0;
+        for (int i = 0; i < models.length; i++) {
+            ValueModel mod = models[i];
 
-                Label lab = new Label(mod.getName() + ":");
-                referencesPane.getChildren().add(lab);
-                lab.setLayoutY(currHeight + 5);
-                lab.setLayoutX(10);
-                lab.setTextAlignment(TextAlignment.RIGHT);
+            Label lab = new Label(mod.getName() + ":");
+            referencesPane.getChildren().add(lab);
+            lab.setLayoutY(currHeight + 5);
+            lab.setLayoutX(10);
+            lab.setTextAlignment(TextAlignment.RIGHT);
 
-                TextField text = new TextField(mod.getReference());
-                referencesPane.getChildren().add(text);
-                text.setLayoutY(currHeight);
-                text.setLayoutX(lab.getLayoutX() + 50);
-                text.setPrefWidth(100);
-                text.setOnKeyReleased(value -> {
-                    mod.setReference(text.getText());
-                });
+            TextField text = new TextField(mod.getReference());
+            referencesPane.getChildren().add(text);
+            text.setLayoutY(currHeight);
+            text.setLayoutX(lab.getLayoutX() + 50);
+            text.setPrefWidth(100);
+            text.setOnKeyReleased(value -> {
+                mod.setReference(text.getText());
+            });
 
-                currHeight += 40;
-            }
+            currHeight += 40;
+        }
     }
 
     private void setUpPhysicalConstantsModelsTextFields() {
