@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squidParametersManager.SquidParametersManagerGUIController">
     <children>
-        <TabPane layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+        <TabPane layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
             <tabs>
                 <Tab text="Physical Constants Models">
                     <content>
@@ -94,8 +94,26 @@
                                 </TabPane>
                                 <TabPane layoutX="14.0" layoutY="312.0" prefHeight="214.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="370.0">
                                     <tabs>
-                                        <Tab text="Correlations" />
-                                        <Tab text="Covariances" />
+                                        <Tab text="Correlations">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="physConstCorrTable" layoutY="25.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <Label fx:id="physConstCorrLabel" layoutX="42.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Covariances">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="physConstCovTable" layoutX="8.0" layoutY="54.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                        <Label fx:id="physConstCovLabel" layoutX="39.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
                                     </tabs>
                                 </TabPane>
                             </children>
@@ -138,7 +156,7 @@
                                 <Label layoutX="302.0" layoutY="90.0" text="Date Certified:" />
                                 <Label layoutX="397.0" layoutY="57.0" text="Version:" />
                                 <Label fx:id="refMatIsEditable" layoutX="579.0" layoutY="57.0" />
-                                <TabPane layoutX="14.0" layoutY="112.0" prefHeight="240.0" prefWidth="635.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+                                <TabPane layoutX="14.0" layoutY="112.0" prefHeight="240.0" prefWidth="635.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="120.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
@@ -150,13 +168,14 @@
                                             </content>
                                         </Tab>
                                         <Tab text="Concentrations">
-                                 <content>
-                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                       <children>
-                                          <TableView fx:id="refMatConcentrationsTable" layoutX="21.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
-                                       </children>
-                                    </AnchorPane>
-                                 </content></Tab>
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="refMatConcentrationsTable" layoutX="21.0" layoutY="5.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
                                         <Tab text="Specs">
                                         </Tab>
                                         <Tab text="Ref and Comment">
@@ -174,10 +193,28 @@
                                         <Tab text="Apparent Dates" />
                                     </tabs>
                                 </TabPane>
-                                <TabPane layoutX="14.0" layoutY="320.0" prefHeight="214.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="370.0">
+                                <TabPane layoutX="14.0" layoutY="320.0" prefHeight="214.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="370.0">
                                     <tabs>
-                                        <Tab text="Correlations" />
-                                        <Tab text="Covariances" />
+                                        <Tab text="Correlations">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <Label fx:id="refMatCorrLabel" layoutX="14.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Covariances">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <Label fx:id="refMatCovLabel" layoutX="30.0" layoutY="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0" />
+                                                        <TableView fx:id="refMatCovTable" layoutX="20.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0" />
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
                                     </tabs>
                                 </TabPane>
                             </children>

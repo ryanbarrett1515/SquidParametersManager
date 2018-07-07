@@ -8,6 +8,8 @@ package org.cirdles.squidParametersManager.parameterModels;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.cirdles.squidParametersManager.ValueModel;
+import org.cirdles.squidParametersManager.matrices.CorrelationMatrixModel;
+import org.cirdles.squidParametersManager.matrices.CovarianceMatrixModel;
 import org.cirdles.squidParametersManager.util.DateHelper;
 
 /**
@@ -25,6 +27,8 @@ public class ParametersManager implements
     protected String comments;
     protected String references;
     protected ValueModel[] values;
+    protected CorrelationMatrixModel corrModel;
+    protected CovarianceMatrixModel covModel;
 
     public ParametersManager() {
         modelName = "";
@@ -35,15 +39,17 @@ public class ParametersManager implements
         references = "";
         values = new ValueModel[5];
         values[0] = new ValueModel("test", "test", "test", new BigDecimal(9.4983756873465873465687345),
-        new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0), new BigDecimal(0));
         values[1] = new ValueModel("test", "test", "test", new BigDecimal(0),
-        new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0), new BigDecimal(0));
         values[2] = new ValueModel("test", "test", "test", new BigDecimal(0),
-        new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0), new BigDecimal(0));
         values[3] = new ValueModel("test", "test", "test", new BigDecimal(0),
-        new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0), new BigDecimal(0));
         values[4] = new ValueModel("test", "test", "test", new BigDecimal(0),
-        new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0), new BigDecimal(0));
+        corrModel = new CorrelationMatrixModel();
+        covModel = new CovarianceMatrixModel();
     }
 
     public ParametersManager(String modelName) {
@@ -54,6 +60,8 @@ public class ParametersManager implements
         comments = "";
         references = "";
         values = new ValueModel[0];
+        corrModel = new CorrelationMatrixModel();
+        covModel = new CovarianceMatrixModel();
     }
 
     public ParametersManager(String modelName, String labName,
@@ -65,9 +73,11 @@ public class ParametersManager implements
         comments = "";
         references = "";
         values = new ValueModel[0];
+        corrModel = new CorrelationMatrixModel();
+        covModel = new CovarianceMatrixModel();
     }
 
-    public ParametersManager(String modelName, String labName, String version, 
+    public ParametersManager(String modelName, String labName, String version,
             String dateCertified, String comments, String references) {
         this.modelName = modelName;
         this.labName = labName;
@@ -76,6 +86,8 @@ public class ParametersManager implements
         this.comments = comments;
         this.references = references;
         values = new ValueModel[0];
+        corrModel = new CorrelationMatrixModel();
+        covModel = new CovarianceMatrixModel();
     }
 
     public ParametersManager(String modelName, String labName, String version,
@@ -88,6 +100,8 @@ public class ParametersManager implements
         this.comments = comments;
         this.references = references;
         this.values = values;
+        corrModel = new CorrelationMatrixModel();
+        covModel = new CovarianceMatrixModel();
     }
 
     @Override
@@ -158,6 +172,22 @@ public class ParametersManager implements
 
     public void setValues(ValueModel[] values) {
         this.values = values;
+    }
+
+    public CorrelationMatrixModel getCorrModel() {
+        return corrModel;
+    }
+
+    public void setCorrModel(CorrelationMatrixModel corrModel) {
+        this.corrModel = corrModel;
+    }
+
+    public CovarianceMatrixModel getCovModel() {
+        return covModel;
+    }
+
+    public void setCovModel(CovarianceMatrixModel covModel) {
+        this.covModel = covModel;
     }
 
 }

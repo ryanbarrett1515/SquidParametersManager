@@ -5,11 +5,13 @@
  */
 package org.cirdles.squidParametersManager;
 
+import Jama.Matrix;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squidParametersManager.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squidParametersManager.util.TextFieldComparer;
 
 /**
  * FXML Controller class
@@ -116,7 +119,23 @@ public class SquidParametersManagerGUIController implements Initializable {
     private AnchorPane referencesPane;
     @FXML
     private TableView<DataModel> refMatConcentrationsTable;
-    
+    @FXML
+    private TableView<ObservableList<TextField>> physConstCorrTable;
+    @FXML
+    private Label physConstCorrLabel;
+    @FXML
+    private TableView<ObservableList<TextField>> physConstCovTable;
+    @FXML
+    private Label physConstCovLabel;
+    @FXML
+    private Label refMatCorrLabel;
+    @FXML
+    private TableView<ObservableList<TextField>> refMatCorrTable;
+    @FXML
+    private Label refMatCovLabel;
+    @FXML
+    private TableView<ObservableList<TextField>> refMatCovTable;
+
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
@@ -134,12 +153,67 @@ public class SquidParametersManagerGUIController implements Initializable {
         setUpPhysConstData();
         setUpMolarMasses();
         setUpReferences();
+        setUpPhysConstCov();
+        setUpPhysConstCorr();
 
         setUpReferenceMaterialTextFields();
         setUpRefMatData();
         setUpConcentrations();
+        setUpRefMatCov();
+        setUpRefMatCorr();
 
         setUpLaboratoryName();
+    }
+
+    private void setUpPhysConstCov() {
+        initializeTableWithObList(physConstCovTable,
+                getObListFromMatrix(physConstModel.getCovModel().getMatrix()));
+    }
+
+    private void setUpPhysConstCorr() {
+        initializeTableWithObList(physConstCorrTable,
+                getObListFromMatrix(physConstModel.getCorrModel().getMatrix()));
+    }
+
+    private void setUpRefMatCov() {
+        initializeTableWithObList(refMatCovTable,
+                getObListFromMatrix(refMatModel.getCovModel().getMatrix()));
+    }
+
+    private void setUpRefMatCorr() {
+        initializeTableWithObList(refMatCorrTable,
+                getObListFromMatrix(refMatModel.getCorrModel().getMatrix()));
+    }
+
+    private ObservableList<ObservableList<TextField>> getObListFromMatrix(Matrix matrix) {
+        ObservableList<ObservableList<TextField>> obList = FXCollections.observableArrayList();
+        if (matrix != null) {
+            double[][] array = matrix.getArray();
+            for (double[] outside : array) {
+                ObservableList<TextField> obListChild = FXCollections.observableArrayList();
+                for (double inside : outside) {
+                    obListChild.add(new TextField(Double.toString(inside)));
+                }
+                obList.add(obListChild);
+            }
+        }
+        return obList;
+    }
+
+    private static void initializeTableWithObList(TableView<ObservableList<TextField>> table,
+            ObservableList<ObservableList<TextField>> obList) {
+        if (obList.size() > 0) {
+            ObservableList<TextField> cols = obList.get(0);
+            for (int i = 0; i < cols.size(); i++) {
+                TableColumn<ObservableList<TextField>, TextField> col = new TableColumn<ObservableList<TextField>, TextField>(cols.get(i).getText());
+                final int colNum = i;
+                col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
+                col.setComparator(new TextFieldComparer());
+                table.getColumns().add(col);
+            }
+            table.setItems(obList);
+        }
+
     }
 
     private void setUpPhysConstData() {
@@ -207,7 +281,7 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         refMatDataTable.refresh();
     }
-    
+
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
 
