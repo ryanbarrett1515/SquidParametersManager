@@ -5,10 +5,10 @@
  */
 package org.cirdles.squidParametersManager;
 
-import Jama.Matrix;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -28,8 +28,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
+import org.cirdles.squidParametersManager.matrices.AbstractMatrixModel;
 import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squidParametersManager.parameterModels.referenceMaterials.ReferenceMaterial;
+import org.cirdles.squidParametersManager.util.StringComparer;
 import org.cirdles.squidParametersManager.util.TextFieldComparer;
 
 /**
@@ -120,21 +122,21 @@ public class SquidParametersManagerGUIController implements Initializable {
     @FXML
     private TableView<DataModel> refMatConcentrationsTable;
     @FXML
-    private TableView<ObservableList<TextField>> physConstCorrTable;
+    private TableView<ObservableList<String>> physConstCorrTable;
     @FXML
     private Label physConstCorrLabel;
     @FXML
-    private TableView<ObservableList<TextField>> physConstCovTable;
+    private TableView<ObservableList<String>> physConstCovTable;
     @FXML
     private Label physConstCovLabel;
     @FXML
     private Label refMatCorrLabel;
     @FXML
-    private TableView<ObservableList<TextField>> refMatCorrTable;
+    private TableView<ObservableList<String>> refMatCorrTable;
     @FXML
     private Label refMatCovLabel;
     @FXML
-    private TableView<ObservableList<TextField>> refMatCovTable;
+    private TableView<ObservableList<String>> refMatCovTable;
 
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
@@ -142,6 +144,8 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -167,53 +171,66 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstCov() {
         initializeTableWithObList(physConstCovTable,
-                getObListFromMatrix(physConstModel.getCovModel().getMatrix()));
+                getObListFromMatrix(physConstModel.getCovModel()));
     }
 
     private void setUpPhysConstCorr() {
         initializeTableWithObList(physConstCorrTable,
-                getObListFromMatrix(physConstModel.getCorrModel().getMatrix()));
+                getObListFromMatrix(physConstModel.getCorrModel()));
     }
 
     private void setUpRefMatCov() {
         initializeTableWithObList(refMatCovTable,
-                getObListFromMatrix(refMatModel.getCovModel().getMatrix()));
+                getObListFromMatrix(refMatModel.getCovModel()));
     }
 
     private void setUpRefMatCorr() {
         initializeTableWithObList(refMatCorrTable,
-                getObListFromMatrix(refMatModel.getCorrModel().getMatrix()));
+                getObListFromMatrix(refMatModel.getCorrModel()));
     }
 
-    private ObservableList<ObservableList<TextField>> getObListFromMatrix(Matrix matrix) {
-        ObservableList<ObservableList<TextField>> obList = FXCollections.observableArrayList();
-        if (matrix != null) {
-            double[][] array = matrix.getArray();
-            for (double[] outside : array) {
-                ObservableList<TextField> obListChild = FXCollections.observableArrayList();
-                for (double inside : outside) {
-                    obListChild.add(new TextField(Double.toString(inside)));
+    private ObservableList<ObservableList<String>> getObListFromMatrix(AbstractMatrixModel matrix) {
+        ObservableList<ObservableList<String>> obList = FXCollections.observableArrayList();
+        if (matrix != null && matrix.getMatrix() != null) {
+            Iterator<Entry<String, Integer>> colIterator = matrix.getCols().entrySet().iterator();
+            ObservableList<String> colList = FXCollections.observableArrayList();
+            colList.add("names ↓→");
+            while (colIterator.hasNext()) {
+                colList.add(colIterator.next().getKey());
+            }
+            obList.add(colList);
+
+            double[][] matrixArray = matrix.getMatrix().getArray();
+            Iterator<Entry<Integer, String>> rowIterator = matrix.getRows().entrySet().iterator();
+            for(int i = 0; i < matrixArray.length; i++) {
+                ObservableList<String> row = FXCollections.observableArrayList();
+                row.add(rowIterator.next().getValue());
+                for(int j = 0; j < matrixArray[0].length; j++) {
+                    row.add(Double.toString(matrixArray[i][j]));
                 }
-                obList.add(obListChild);
+                obList.add(row);
             }
         }
+        
         return obList;
     }
 
-    private static void initializeTableWithObList(TableView<ObservableList<TextField>> table,
-            ObservableList<ObservableList<TextField>> obList) {
+    private static void initializeTableWithObList(TableView<ObservableList<String>> table,
+            ObservableList<ObservableList<String>> obList) {
         if (obList.size() > 0) {
-            ObservableList<TextField> cols = obList.get(0);
+            ObservableList<String> cols = obList.remove(0);
+            table.getColumns().clear();
             for (int i = 0; i < cols.size(); i++) {
-                TableColumn<ObservableList<TextField>, TextField> col = new TableColumn<ObservableList<TextField>, TextField>(cols.get(i).getText());
+                TableColumn<ObservableList<String>, String> col
+                        = new TableColumn<ObservableList<String>, String>(cols.get(i));
                 final int colNum = i;
                 col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
-                col.setComparator(new TextFieldComparer());
+                col.setComparator(new StringComparer());
                 table.getColumns().add(col);
             }
             table.setItems(obList);
+            table.refresh();
         }
-
     }
 
     private void setUpPhysConstData() {
@@ -221,19 +238,23 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("name"));
+                new PropertyValueFactory("name"));
+        nameCol.setComparator(new StringComparer());
 
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("value"));
+                new PropertyValueFactory("value"));
+        valCol.setComparator(new TextFieldComparer());
 
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
+                new PropertyValueFactory("oneSigmaABS"));
+        absCol.setComparator(new TextFieldComparer());
 
         TableColumn pctCol = new TableColumn("1σ PCT");
         pctCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
+                new PropertyValueFactory("oneSigmaPCT"));
+        pctCol.setComparator(new TextFieldComparer());
 
         physConstDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
 
@@ -254,19 +275,23 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("name"));
+                new PropertyValueFactory("name"));
+        nameCol.setComparator(new StringComparer());
 
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("value"));
+                new PropertyValueFactory("value"));
+        valCol.setComparator(new TextFieldComparer());
 
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
+                new PropertyValueFactory("oneSigmaABS"));
+        absCol.setComparator(new TextFieldComparer());
 
         TableColumn pctCol = new TableColumn("1σ PCT");
         pctCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
+                new PropertyValueFactory("oneSigmaPCT"));
+        pctCol.setComparator(new TextFieldComparer());
 
         refMatDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
 
@@ -310,9 +335,9 @@ public class SquidParametersManagerGUIController implements Initializable {
                     valMod.getOneSigma(), valMod.getOneSigmaSys());
             obList.add(mod);
         }
-        refMatDataTable.setItems(obList);
+        refMatConcentrationsTable.setItems(obList);
 
-        refMatDataTable.refresh();
+        refMatConcentrationsTable.refresh();
     }
 
     private void setUpMolarMasses() {
