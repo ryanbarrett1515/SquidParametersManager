@@ -7,12 +7,15 @@ package org.cirdles.squidParametersManager;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,6 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squidParametersManager.matrices.AbstractMatrixModel;
+import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
 import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squidParametersManager.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squidParametersManager.util.StringComparer;
@@ -58,7 +62,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     @FXML
     private Button physConstQuitButton;
     @FXML
-    private ChoiceBox<?> physConstCB;
+    private ChoiceBox<String> physConstCB;
     @FXML
     private TextField physConstModelName;
     @FXML
@@ -88,7 +92,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     @FXML
     private Button refMatQuitButton;
     @FXML
-    private ChoiceBox<?> refMatCB;
+    private ChoiceBox<String> refMatCB;
     @FXML
     private TextField refMatModelName;
     @FXML
@@ -141,9 +145,12 @@ public class SquidParametersManagerGUIController implements Initializable {
     String laboratoryName;
     PhysicalConstantsModel physConstModel;
     ReferenceMaterial refMatModel;
+    List<PhysicalConstantsModel> physConstModels;
+    List<ReferenceMaterial> refMatModels;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -151,22 +158,69 @@ public class SquidParametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
         physConstModel = new PhysicalConstantsModel();
+        physConstModels = new ArrayList<>();
+        physConstModels.add(physConstModel);
+        setUpPhysConstCB();
+        setUpPhysConst();
         refMatModel = new ReferenceMaterial();
+        refMatModels = new ArrayList<>();
+        refMatModels.add(refMatModel);
+        setUpRefMatCB();
+        setUpRefMat();
+        setUpLaboratoryName();
+    }
 
+    private void setUpPhysConst() {
         setUpPhysicalConstantsModelsTextFields();
         setUpPhysConstData();
         setUpMolarMasses();
         setUpReferences();
         setUpPhysConstCov();
         setUpPhysConstCorr();
+    }
 
+    private void setUpRefMat() {
         setUpReferenceMaterialTextFields();
         setUpRefMatData();
         setUpConcentrations();
         setUpRefMatCov();
         setUpRefMatCorr();
+    }
 
-        setUpLaboratoryName();
+    private void setUpPhysConstCB() {
+        final ObservableList<String> cbList = FXCollections.observableArrayList();
+        for (PhysicalConstantsModel mod : physConstModels) {
+            cbList.add(mod.getModelName() + " V" + mod.getVersion());
+        }
+        physConstCB.setItems(cbList);
+        physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue val, Number ov, Number nv) {
+                setPhysConstModel(nv.intValue());
+            }
+        });
+    }
+
+    private void setPhysConstModel(int num) {
+        physConstModel = physConstModels.get(num);
+        setUpPhysConst();
+    }
+
+    private void setUpRefMatCB() {
+        final ObservableList<String> cbList = FXCollections.observableArrayList();
+        for (ReferenceMaterial mod : refMatModels) {
+            cbList.add(mod.getModelName() + " V" + mod.getVersion());
+        }
+        refMatCB.setItems(cbList);
+        refMatCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue val, Number ov, Number nv) {
+                setRefMatModel(nv.intValue());
+            }
+        });
+    }
+
+    private void setRefMatModel(int num) {
+        refMatModel = refMatModels.get(num);
+        setUpRefMat();
     }
 
     private void setUpPhysConstCov() {
@@ -189,7 +243,7 @@ public class SquidParametersManagerGUIController implements Initializable {
                 getObListFromMatrix(refMatModel.getCorrModel()));
     }
 
-    private ObservableList<ObservableList<String>> getObListFromMatrix(AbstractMatrixModel matrix) {
+    private static ObservableList<ObservableList<String>> getObListFromMatrix(AbstractMatrixModel matrix) {
         ObservableList<ObservableList<String>> obList = FXCollections.observableArrayList();
         if (matrix != null && matrix.getMatrix() != null) {
             Iterator<Entry<String, Integer>> colIterator = matrix.getCols().entrySet().iterator();
@@ -202,16 +256,16 @@ public class SquidParametersManagerGUIController implements Initializable {
 
             double[][] matrixArray = matrix.getMatrix().getArray();
             Iterator<Entry<Integer, String>> rowIterator = matrix.getRows().entrySet().iterator();
-            for(int i = 0; i < matrixArray.length; i++) {
+            for (int i = 0; i < matrixArray.length; i++) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 row.add(rowIterator.next().getValue());
-                for(int j = 0; j < matrixArray[0].length; j++) {
+                for (int j = 0; j < matrixArray[0].length; j++) {
                     row.add(Double.toString(matrixArray[i][j]));
                 }
                 obList.add(row);
             }
         }
-        
+
         return obList;
     }
 
@@ -221,8 +275,7 @@ public class SquidParametersManagerGUIController implements Initializable {
             ObservableList<String> cols = obList.remove(0);
             table.getColumns().clear();
             for (int i = 0; i < cols.size(); i++) {
-                TableColumn<ObservableList<String>, String> col
-                        = new TableColumn<ObservableList<String>, String>(cols.get(i));
+                TableColumn<ObservableList<String>, String> col = new TableColumn(cols.get(i));
                 final int colNum = i;
                 col.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colNum)));
                 col.setComparator(new StringComparer());
@@ -235,112 +288,58 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
-
-        TableColumn nameCol = new TableColumn("name");
-        nameCol.setCellValueFactory(
-                new PropertyValueFactory("name"));
-        nameCol.setComparator(new StringComparer());
-
-        TableColumn valCol = new TableColumn("value");
-        valCol.setCellValueFactory(
-                new PropertyValueFactory("value"));
-        valCol.setComparator(new TextFieldComparer());
-
-        TableColumn absCol = new TableColumn("1σ ABS");
-        absCol.setCellValueFactory(
-                new PropertyValueFactory("oneSigmaABS"));
-        absCol.setComparator(new TextFieldComparer());
-
-        TableColumn pctCol = new TableColumn("1σ PCT");
-        pctCol.setCellValueFactory(
-                new PropertyValueFactory("oneSigmaPCT"));
-        pctCol.setComparator(new TextFieldComparer());
-
-        physConstDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
-
-        final ObservableList<DataModel> obList = FXCollections.observableArrayList();
-        for (int i = 0; i < physConstModel.getValues().length; i++) {
-            ValueModel valMod = physConstModel.getValues()[i];
-            DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
-            obList.add(mod);
-        }
-        physConstDataTable.setItems(obList);
-
+        setUpDataModelColumns(physConstDataTable);
+        physConstDataTable.setItems(getDataModelObList(physConstModel.getValues()));
         physConstDataTable.refresh();
     }
 
     private void setUpRefMatData() {
         refMatDataTable.getColumns().clear();
-
-        TableColumn nameCol = new TableColumn("name");
-        nameCol.setCellValueFactory(
-                new PropertyValueFactory("name"));
-        nameCol.setComparator(new StringComparer());
-
-        TableColumn valCol = new TableColumn("value");
-        valCol.setCellValueFactory(
-                new PropertyValueFactory("value"));
-        valCol.setComparator(new TextFieldComparer());
-
-        TableColumn absCol = new TableColumn("1σ ABS");
-        absCol.setCellValueFactory(
-                new PropertyValueFactory("oneSigmaABS"));
-        absCol.setComparator(new TextFieldComparer());
-
-        TableColumn pctCol = new TableColumn("1σ PCT");
-        pctCol.setCellValueFactory(
-                new PropertyValueFactory("oneSigmaPCT"));
-        pctCol.setComparator(new TextFieldComparer());
-
-        refMatDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
-
-        final ObservableList<DataModel> obList = FXCollections.observableArrayList();
-        for (int i = 0; i < refMatModel.getValues().length; i++) {
-            ValueModel valMod = refMatModel.getValues()[i];
-            DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
-            obList.add(mod);
-        }
-        refMatDataTable.setItems(obList);
-
+        setUpDataModelColumns(refMatDataTable);
+        refMatDataTable.setItems(getDataModelObList(refMatModel.getValues()));
         refMatDataTable.refresh();
     }
 
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
+        setUpDataModelColumns(refMatConcentrationsTable);
+        refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations()));
+        refMatConcentrationsTable.refresh();
+    }
 
+    private static void setUpDataModelColumns(TableView<DataModel> table) {
         TableColumn nameCol = new TableColumn("name");
-        nameCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("name"));
+        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+        nameCol.setComparator(new StringComparer());
 
         TableColumn valCol = new TableColumn("value");
-        valCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("value"));
+        valCol.setCellValueFactory(new PropertyValueFactory("value"));
+        valCol.setComparator(new TextFieldComparer());
 
         TableColumn absCol = new TableColumn("1σ ABS");
-        absCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaABS"));
+        absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
+        absCol.setComparator(new TextFieldComparer());
 
         TableColumn pctCol = new TableColumn("1σ PCT");
-        pctCol.setCellValueFactory(
-                new PropertyValueFactory<DataModel, String>("oneSigmaPCT"));
+        pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
+        pctCol.setComparator(new TextFieldComparer());
 
-        refMatConcentrationsTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+        table.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+    }
 
+    private ObservableList<DataModel> getDataModelObList(ValueModel[] values) {
         final ObservableList<DataModel> obList = FXCollections.observableArrayList();
-        for (int i = 0; i < refMatModel.getConcentrations().length; i++) {
-            ValueModel valMod = refMatModel.getConcentrations()[i];
+        for (int i = 0; i < values.length; i++) {
+            ValueModel valMod = values[i];
             DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
                     valMod.getOneSigma(), valMod.getOneSigmaSys());
             obList.add(mod);
         }
-        refMatConcentrationsTable.setItems(obList);
-
-        refMatConcentrationsTable.refresh();
+        return obList;
     }
 
     private void setUpMolarMasses() {
+        molarMassesTextArea.clear();
         Iterator<Entry<String, BigDecimal>> molarMassesIterator
                 = physConstModel.getMolarMasses().entrySet().iterator();
         Entry<String, BigDecimal> curr;
@@ -356,6 +355,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     }
 
     private void setUpReferences() {
+        referencesPane.getChildren().clear();
         ValueModel[] models = physConstModel.getValues();
         int currHeight = 0;
         for (int i = 0; i < models.length; i++) {
