@@ -72,6 +72,26 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         return retVal;
     }
 
+    public BigDecimal getOneSigmaABS() {
+        BigDecimal retVal;
+        if (uncertaintyType.toUpperCase().equals("PCT")) {
+            retVal = oneSigma.movePointLeft(2);
+        } else {
+            retVal = oneSigma;
+        }
+        return retVal;
+    }
+
+    public BigDecimal getOneSigmaPCT() {
+        BigDecimal retVal;
+        if (uncertaintyType.toUpperCase().equals("ABS")) {
+            retVal = oneSigma.movePointRight(2);
+        } else {
+            retVal = oneSigma;
+        }
+        return retVal;
+    }
+
     public String getName() {
         return name;
     }

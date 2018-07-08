@@ -262,7 +262,7 @@ public class SquidParametersManagerGUIController implements Initializable {
         for (int i = 0; i < physConstModel.getValues().length; i++) {
             ValueModel valMod = physConstModel.getValues()[i];
             DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigma(), valMod.getOneSigmaSys());
+                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
             obList.add(mod);
         }
         physConstDataTable.setItems(obList);
@@ -299,7 +299,7 @@ public class SquidParametersManagerGUIController implements Initializable {
         for (int i = 0; i < refMatModel.getValues().length; i++) {
             ValueModel valMod = refMatModel.getValues()[i];
             DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigma(), valMod.getOneSigmaSys());
+                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
             obList.add(mod);
         }
         refMatDataTable.setItems(obList);
