@@ -288,31 +288,20 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     private void setUpPhysConstData() {
         physConstDataTable.getColumns().clear();
-        setUpDataModelColumns(physConstDataTable);
+        List<TableColumn> columns = getDataModelColumns();
+        for (TableColumn col : columns) {
+            physConstDataTable.getColumns().add(col);
+        }
         physConstDataTable.setItems(getDataModelObList(physConstModel.getValues()));
         physConstDataTable.refresh();
     }
 
     private void setUpRefMatData() {
         refMatDataTable.getColumns().clear();
-
-        TableColumn nameCol = new TableColumn("name");
-        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
-        nameCol.setComparator(new StringComparer());
-
-        TableColumn valCol = new TableColumn("value");
-        valCol.setCellValueFactory(new PropertyValueFactory("value"));
-        valCol.setComparator(new TextFieldComparer());
-
-        TableColumn absCol = new TableColumn("1σ ABS");
-        absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
-        absCol.setComparator(new TextFieldComparer());
-
-        TableColumn pctCol = new TableColumn("1σ PCT");
-        pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
-        pctCol.setComparator(new TextFieldComparer());
-
-        refMatDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+        List<TableColumn> columns = getDataModelColumns();
+        for (TableColumn col : columns) {
+            refMatDataTable.getColumns().add(col);
+        }
 
         TableColumn measuredCol = new TableColumn("measured");
         measuredCol.setCellValueFactory(new PropertyValueFactory("isMeasured"));
@@ -333,29 +322,38 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     private void setUpConcentrations() {
         refMatConcentrationsTable.getColumns().clear();
-        setUpDataModelColumns(refMatConcentrationsTable);
+        List<TableColumn> columns = getDataModelColumns();
+        for (TableColumn col : columns) {
+            refMatConcentrationsTable.getColumns().add(col);
+        }
         refMatConcentrationsTable.setItems(getDataModelObList(refMatModel.getConcentrations()));
         refMatConcentrationsTable.refresh();
     }
 
-    private static void setUpDataModelColumns(TableView<DataModel> table) {
+    private static List<TableColumn> getDataModelColumns() {
+        List<TableColumn> columns = new ArrayList<>();
+
         TableColumn nameCol = new TableColumn("name");
         nameCol.setCellValueFactory(new PropertyValueFactory("name"));
         nameCol.setComparator(new StringComparer());
+        columns.add(nameCol);
 
         TableColumn valCol = new TableColumn("value");
         valCol.setCellValueFactory(new PropertyValueFactory("value"));
         valCol.setComparator(new TextFieldComparer());
+        columns.add(valCol);
 
         TableColumn absCol = new TableColumn("1σ ABS");
         absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
         absCol.setComparator(new TextFieldComparer());
+        columns.add(absCol);
 
         TableColumn pctCol = new TableColumn("1σ PCT");
         pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
         pctCol.setComparator(new TextFieldComparer());
+        columns.add(pctCol);
 
-        table.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+        return columns;
     }
 
     private ObservableList<DataModel> getDataModelObList(ValueModel[] values) {

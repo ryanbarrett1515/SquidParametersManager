@@ -7,6 +7,8 @@ package org.cirdles.squidParametersManager;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  *
@@ -75,7 +77,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     public BigDecimal getOneSigmaABS() {
         BigDecimal retVal;
         if (uncertaintyType.toUpperCase().equals("PCT")) {
-            retVal = oneSigma.movePointLeft(2);
+            retVal = oneSigma.multiply(value, new MathContext(15, RoundingMode.HALF_UP)).movePointLeft(2);
         } else {
             retVal = oneSigma;
         }
@@ -84,10 +86,12 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
     public BigDecimal getOneSigmaPCT() {
         BigDecimal retVal;
-        if (uncertaintyType.toUpperCase().equals("ABS")) {
-            retVal = oneSigma.movePointRight(2);
-        } else {
+        if (uncertaintyType.toUpperCase().equals("PCT")) {
             retVal = oneSigma;
+        } else if (value.equals(BigDecimal.ZERO)) {
+            retVal = BigDecimal.ZERO;
+        } else {
+            retVal = oneSigma.divide(value, new MathContext(15, RoundingMode.HALF_UP)).movePointRight(2);
         }
         return retVal;
     }
