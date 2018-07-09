@@ -21,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -32,7 +33,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squidParametersManager.matrices.AbstractMatrixModel;
-import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
 import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squidParametersManager.parameterModels.referenceMaterials.ReferenceMaterial;
 import org.cirdles.squidParametersManager.util.StringComparer;
@@ -118,7 +118,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     @FXML
     private TableView<DataModel> physConstDataTable;
     @FXML
-    private TableView<DataModel> refMatDataTable;
+    private TableView<RefMatDataModel> refMatDataTable;
     @FXML
     private TextArea molarMassesTextArea;
     @FXML
@@ -190,7 +190,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     private void setUpPhysConstCB() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (PhysicalConstantsModel mod : physConstModels) {
-            cbList.add(mod.getModelName() + " V" + mod.getVersion());
+            cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         physConstCB.setItems(cbList);
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -208,7 +208,7 @@ public class SquidParametersManagerGUIController implements Initializable {
     private void setUpRefMatCB() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (ReferenceMaterial mod : refMatModels) {
-            cbList.add(mod.getModelName() + " V" + mod.getVersion());
+            cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         refMatCB.setItems(cbList);
         refMatCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -295,8 +295,39 @@ public class SquidParametersManagerGUIController implements Initializable {
 
     private void setUpRefMatData() {
         refMatDataTable.getColumns().clear();
-        setUpDataModelColumns(refMatDataTable);
-        refMatDataTable.setItems(getDataModelObList(refMatModel.getValues()));
+
+        TableColumn nameCol = new TableColumn("name");
+        nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+        nameCol.setComparator(new StringComparer());
+
+        TableColumn valCol = new TableColumn("value");
+        valCol.setCellValueFactory(new PropertyValueFactory("value"));
+        valCol.setComparator(new TextFieldComparer());
+
+        TableColumn absCol = new TableColumn("1σ ABS");
+        absCol.setCellValueFactory(new PropertyValueFactory("oneSigmaABS"));
+        absCol.setComparator(new TextFieldComparer());
+
+        TableColumn pctCol = new TableColumn("1σ PCT");
+        pctCol.setCellValueFactory(new PropertyValueFactory("oneSigmaPCT"));
+        pctCol.setComparator(new TextFieldComparer());
+
+        refMatDataTable.getColumns().addAll(nameCol, valCol, absCol, pctCol);
+
+        TableColumn measuredCol = new TableColumn("measured");
+        measuredCol.setCellValueFactory(new PropertyValueFactory("isMeasured"));
+        refMatDataTable.getColumns().add(measuredCol);
+
+        final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
+        ValueModel[] values = refMatModel.getValues();
+        for (int i = 0; i < values.length; i++) {
+            ValueModel valMod = values[i];
+            RefMatDataModel mod = new RefMatDataModel(valMod.getName(), valMod.getValue(),
+                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT(),
+                    true);
+            obList.add(mod);
+        }
+        refMatDataTable.setItems(obList);
         refMatDataTable.refresh();
     }
 
@@ -487,6 +518,28 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         public void setOneSigmaPCT(TextField oneSigmaPCT) {
             this.oneSigmaPCT = oneSigmaPCT;
+        }
+
+    }
+
+    public class RefMatDataModel extends DataModel {
+
+        CheckBox isMeasured;
+
+        public RefMatDataModel(String name, BigDecimal value,
+                BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT,
+                boolean isMeasured) {
+            super(name, value, oneSigmaABS, oneSigmaPCT);
+            this.isMeasured = new CheckBox();
+            this.isMeasured.setSelected(isMeasured);
+        }
+
+        public CheckBox getIsMeasured() {
+            return isMeasured;
+        }
+
+        public void setIsMeasured(CheckBox isMeasured) {
+            this.isMeasured = isMeasured;
         }
 
     }
