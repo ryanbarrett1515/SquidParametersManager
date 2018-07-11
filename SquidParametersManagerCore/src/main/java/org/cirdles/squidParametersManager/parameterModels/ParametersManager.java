@@ -39,15 +39,15 @@ public class ParametersManager implements
         references = "";
         values = new ValueModel[5];
         values[0] = new ValueModel("test", "test", "test", new BigDecimal(9.4983756873465873465687345),
-                new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0));
         values[1] = new ValueModel("test", "test", "test", new BigDecimal(0),
-                new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0));
         values[2] = new ValueModel("test", "test", "test", new BigDecimal(0),
-                new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0));
         values[3] = new ValueModel("test", "test", "test", new BigDecimal(0),
-                new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0));
         values[4] = new ValueModel("test", "test", "test", new BigDecimal(0),
-                new BigDecimal(0), new BigDecimal(0));
+                new BigDecimal(0));
         corrModel = new CorrelationMatrixModel();
         covModel = new CovarianceMatrixModel();
     }

@@ -1,0 +1,46 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ReferenceMaterial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="modelName"/>
+        <xs:element type="xs:float" name="version"/>
+        <xs:element type="xs:string" name="labName"/>
+        <xs:element type="xs:date" name="dateCertified"/>
+        <xs:element type="xs:string" name="references"/>
+        <xs:element type="xs:string" name="comments"/>
+        <xs:element name="values">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ValueModel" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="name"/>
+                    <xs:element type="xs:float" name="value"/>
+                    <xs:element type="xs:string" name="uncertaintyType"/>
+                    <xs:element type="xs:byte" name="oneSigma"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="concentrations">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ValueModel" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="name"/>
+                    <xs:element type="xs:float" name="value"/>
+                    <xs:element type="xs:string" name="uncertaintyType"/>
+                    <xs:element type="xs:float" name="oneSigma"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

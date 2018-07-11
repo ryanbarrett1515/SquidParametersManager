@@ -5,6 +5,7 @@
  */
 package org.cirdles.squidParametersManager;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -157,12 +158,16 @@ public class SquidParametersManagerGUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
-        physConstModel = new PhysicalConstantsModel();
+
+        File physConstFile = new File("src/main/resources/org/cirdles/squidParametersManager/etphysconstmodel.xml");
+        physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
         setUpPhysConst();
-        refMatModel = new ReferenceMaterial();
+
+        File refMatFile = new File("src/main/resources/org/cirdles/squidParametersManager/referencematerial.xml");
+        refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
         setUpRefMatCB();
@@ -361,7 +366,7 @@ public class SquidParametersManagerGUIController implements Initializable {
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
             DataModel mod = new DataModel(valMod.getName(), valMod.getValue(),
-                    valMod.getOneSigma(), valMod.getOneSigmaSys());
+                    valMod.getOneSigmaABS(), valMod.getOneSigmaPCT());
             obList.add(mod);
         }
         return obList;

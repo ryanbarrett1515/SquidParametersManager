@@ -5,10 +5,13 @@
  */
 package org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels;
 
+import com.thoughtworks.xstream.XStream;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
+import org.cirdles.squidParametersManager.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
 
 /**
  *
@@ -42,6 +45,25 @@ public class PhysicalConstantsModel extends ParametersManager {
         molarMasses.put("gmol232", new BigDecimal("232.038051"));
         molarMasses.put("gmol235", new BigDecimal("235.043922"));
         molarMasses.put("gmol238", new BigDecimal("238.050785"));
+    }
+
+    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(String input) {
+        XStream xstream = getETReduxXStream();
+        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
+        return model;
+    }
+
+    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(File input) {
+        XStream xstream = getETReduxXStream();
+        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
+        return model;
+    }
+
+    public static XStream getETReduxXStream() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(new ETReduxPhysConstConverter());
+        xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
+        return xstream;
     }
 
 }

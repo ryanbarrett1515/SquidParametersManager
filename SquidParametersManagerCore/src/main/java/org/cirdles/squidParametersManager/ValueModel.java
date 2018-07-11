@@ -21,7 +21,6 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     private String reference;
     private BigDecimal value;
     private BigDecimal oneSigma;
-    private BigDecimal oneSigmaSys;
 
     public ValueModel() {
         this.name = "";
@@ -29,7 +28,6 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         reference = "";
         value = null;
         oneSigma = null;
-        oneSigmaSys = null;
     }
 
     public ValueModel(String name) {
@@ -38,27 +36,24 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         reference = "";
         value = null;
         oneSigma = null;
-        oneSigmaSys = null;
     }
 
     public ValueModel(String name, String uncertaintyType, BigDecimal value,
-            BigDecimal oneSigma, BigDecimal oneSigmaSys) {
+            BigDecimal oneSigma) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.value = value;
         this.oneSigma = oneSigma;
-        this.oneSigmaSys = oneSigmaSys;
         this.reference = "";
     }
 
     public ValueModel(String name, String uncertaintyType, String reference,
-            BigDecimal value, BigDecimal oneSigma, BigDecimal oneSigmaSys) {
+            BigDecimal value, BigDecimal oneSigma) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.reference = reference;
         this.value = value;
         this.oneSigma = oneSigma;
-        this.oneSigmaSys = oneSigmaSys;
     }
 
     @Override
@@ -135,13 +130,4 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     public void setOneSigma(BigDecimal oneSigma) {
         this.oneSigma = oneSigma;
     }
-
-    public BigDecimal getOneSigmaSys() {
-        return oneSigmaSys;
-    }
-
-    public void setOneSigmaSys(BigDecimal oneSigmaSys) {
-        this.oneSigmaSys = oneSigmaSys;
-    }
-
 }

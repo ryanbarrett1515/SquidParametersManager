@@ -25,7 +25,7 @@
                                     <menus>
                                         <Menu mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem fx:id="physConstImpXML" mnemonicParsing="false" text="Import Physical COnstants Model from XML File" />
+                                                <MenuItem fx:id="physConstImpXML" mnemonicParsing="false" text="Import Physical Constants Model from XML File" />
                                                 <MenuItem fx:id="phyConstExpXML" mnemonicParsing="false" text="Export Physical Constants Model as XML File" />
                                             </items>
                                         </Menu>
