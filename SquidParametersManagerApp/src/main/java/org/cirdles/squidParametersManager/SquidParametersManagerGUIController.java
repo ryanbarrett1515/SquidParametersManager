@@ -163,16 +163,42 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         File physConstFile = new File("src/main/resources/org/cirdles/squidParametersManager/EARTHTIME Physical Constants Model v.1.1.xml");
         physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
+//        setUpPhysConstCovariancesAndCorrelations();
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
 
         File refMatFile = new File("src/main/resources/org/cirdles/squidParametersManager/Zircon-91500 v.1.0.xml");
         refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
+        setUpRefMatCovariancesAndCorrelations();
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
         setUpRefMatCB();
         setUpLaboratoryName();
+    }
+    
+    private void setUpPhysConstCovariancesAndCorrelations() {
+        physConstModel.initializeNewRatiosAndRhos();
+        String[] rowNames = new String[physConstModel.getValues().length];
+        for(int i = 0; i < rowNames.length; i++) {
+            rowNames[i] = physConstModel.getValues()[i].getName();
+        }
+        physConstModel.getCorrModel().setRows(rowNames);
+        physConstModel.getCorrModel().setCols(physConstModel.getCorrModel().getRows());
+        physConstModel.getCorrModel().initializeCorrelations(physConstModel.getRhos());
+        physConstModel.generateCovariancesFromCorrelations();
+    }
+    
+    private void setUpRefMatCovariancesAndCorrelations() {
+        refMatModel.initializeNewRatiosAndRhos();
+        String[] rowNames = new String[refMatModel.getValues().length];
+        for(int i = 0; i < rowNames.length; i++) {
+            rowNames[i] = refMatModel.getValues()[i].getName();
+        }
+        refMatModel.getCorrModel().setRows(rowNames);
+        refMatModel.getCorrModel().setCols(refMatModel.getCorrModel().getRows());
+        refMatModel.getCorrModel().initializeCorrelations(refMatModel.getRhos());
+        refMatModel.generateCovariancesFromCorrelations();
     }
 
     private void setUpPhysConst() {

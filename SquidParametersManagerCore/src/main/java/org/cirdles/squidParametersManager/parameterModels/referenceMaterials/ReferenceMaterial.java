@@ -68,6 +68,7 @@ public class ReferenceMaterial extends ParametersManager {
         XStream xstream = new XStream();
         xstream.registerConverter(new ETReduxRefMatConverter());
         xstream.alias("ReferenceMaterial", ReferenceMaterial.class);
+        xstream.alias("MineralStandardUPbModel", ReferenceMaterial.class);
         return xstream;
     }
 
