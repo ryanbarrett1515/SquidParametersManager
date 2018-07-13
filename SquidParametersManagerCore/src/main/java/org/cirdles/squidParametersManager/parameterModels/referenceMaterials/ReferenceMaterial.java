@@ -7,10 +7,12 @@ package org.cirdles.squidParametersManager.parameterModels.referenceMaterials;
 
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.cirdles.squidParametersManager.ValueModel;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
-import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import static org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel.getETReduxXStream;
+import org.cirdles.squidParametersManager.util.MineralStandardUPbRatiosEnum;
 import org.cirdles.squidParametersManager.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 
 /**
@@ -26,6 +28,24 @@ public class ReferenceMaterial extends ParametersManager {
         super();
         concentrations = new ValueModel[0];
         dataMeasured = new boolean[0];
+    }
+    
+    @Override
+    public final void initializeNewRatiosAndRhos() {
+        ArrayList<ValueModel> holdRatios = new ArrayList<>();
+        for (MineralStandardUPbRatiosEnum value : MineralStandardUPbRatiosEnum.values()) {
+            holdRatios.add( //
+                    new ValueModel(value.getName(),
+                            "ABS", BigDecimal.ZERO,
+                            BigDecimal.ZERO));
+        }
+
+        values = holdRatios.toArray(new ValueModel[holdRatios.size()]);
+
+        Arrays.sort(values, new DataValueModelNameComparator());
+
+        buildRhosMap();
+
     }
 
     public ValueModel[] getConcentrations() {

@@ -42,9 +42,14 @@ public class ETReduxPhysConstConverter implements Converter {
         model.setModelName(reader.getValue());
         reader.moveUp();
 
+        String version = "";
         reader.moveDown();
-        model.setVersion(reader.getValue());
+        version += reader.getValue() + ".";
         reader.moveUp();
+        reader.moveDown();
+        version += reader.getValue();
+        reader.moveUp();
+        model.setVersion(version);
 
         reader.moveDown();
         model.setLabName(reader.getValue());
@@ -66,15 +71,21 @@ public class ETReduxPhysConstConverter implements Converter {
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             ValueModel valMod = new ValueModel();
+            String currBigDec;
 
             reader.moveDown();
-            
+
             reader.moveDown();
             valMod.setName(reader.getValue());
             reader.moveUp();
 
             reader.moveDown();
-            valMod.setValue(new BigDecimal(reader.getValue()));
+            currBigDec = reader.getValue();
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                valMod.setValue(BigDecimal.ZERO);
+            } else {
+                valMod.setValue(new BigDecimal(currBigDec));
+            }
             reader.moveUp();
 
             reader.moveDown();
@@ -82,23 +93,54 @@ public class ETReduxPhysConstConverter implements Converter {
             reader.moveUp();
 
             reader.moveDown();
-            valMod.setOneSigma(new BigDecimal(reader.getValue()));
+            currBigDec = reader.getValue();
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                valMod.setOneSigma(BigDecimal.ZERO);
+            } else {
+                valMod.setOneSigma(new BigDecimal(currBigDec));
+            }
             reader.moveUp();
 
             reader.moveDown();
             valMod.setReference(reader.getValue());
             reader.moveUp();
-            
+
             reader.moveUp();
-            
+
             values.add(valMod);
         }
         reader.moveUp();
         ValueModel[] valuesArray = new ValueModel[values.size()];
-        for(int i = 0; i < values.size(); i++) {
+        for (int i = 0; i < values.size(); i++) {
             valuesArray[i] = values.get(i);
         }
         model.setValues(valuesArray);
+
+        Map<String, BigDecimal> rhos = new HashMap<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            rhos.put(key, value);
+        }
+        reader.moveUp();
+        model.setRhos(rhos);
 
         Map<String, BigDecimal> molarMasses = new HashMap<>();
         reader.moveDown();
@@ -110,7 +152,13 @@ public class ETReduxPhysConstConverter implements Converter {
             reader.moveUp();
 
             reader.moveDown();
-            BigDecimal value = new BigDecimal(reader.getValue());
+            String currBigDec = reader.getValue();
+            BigDecimal value;
+            if (Double.parseDouble(currBigDec) == 0.0) {
+                value = BigDecimal.ZERO;
+            } else {
+                value = new BigDecimal(currBigDec);
+            }
             reader.moveUp();
 
             reader.moveUp();

@@ -26,12 +26,14 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squidParametersManager.matrices.AbstractMatrixModel;
 import org.cirdles.squidParametersManager.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -159,19 +161,17 @@ public class SquidParametersManagerGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         laboratoryName = "";
 
-        File physConstFile = new File("src/main/resources/org/cirdles/squidParametersManager/etphysconstmodel.xml");
+        File physConstFile = new File("src/main/resources/org/cirdles/squidParametersManager/EARTHTIME Physical Constants Model v.1.1.xml");
         physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
-        setUpPhysConst();
 
-        File refMatFile = new File("src/main/resources/org/cirdles/squidParametersManager/referencematerial.xml");
+        File refMatFile = new File("src/main/resources/org/cirdles/squidParametersManager/Zircon-91500 v.1.0.xml");
         refMatModel = ReferenceMaterial.getReferenceMaterialFromETReduxXML(refMatFile);
         refMatModels = new ArrayList<>();
         refMatModels.add(refMatModel);
         setUpRefMatCB();
-        setUpRefMat();
         setUpLaboratoryName();
     }
 
@@ -198,6 +198,8 @@ public class SquidParametersManagerGUIController implements Initializable {
             cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         physConstCB.setItems(cbList);
+        setPhysConstModel(0);
+        physConstCB.getSelectionModel().selectFirst();
         physConstCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setPhysConstModel(nv.intValue());
@@ -216,6 +218,8 @@ public class SquidParametersManagerGUIController implements Initializable {
             cbList.add(mod.getModelName() + " v." + mod.getVersion());
         }
         refMatCB.setItems(cbList);
+        setRefMatModel(0);
+        refMatCB.getSelectionModel().selectFirst();
         refMatCB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue val, Number ov, Number nv) {
                 setRefMatModel(nv.intValue());
@@ -316,9 +320,10 @@ public class SquidParametersManagerGUIController implements Initializable {
         ValueModel[] values = refMatModel.getValues();
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
+            Boolean isMeasured = refMatModel.getDataMeasured()[i];
             RefMatDataModel mod = new RefMatDataModel(valMod.getName(), valMod.getValue(),
                     valMod.getOneSigmaABS(), valMod.getOneSigmaPCT(),
-                    true);
+                    isMeasured);
             obList.add(mod);
         }
         refMatDataTable.setItems(obList);
@@ -400,12 +405,13 @@ public class SquidParametersManagerGUIController implements Initializable {
             lab.setLayoutY(currHeight + 5);
             lab.setLayoutX(10);
             lab.setTextAlignment(TextAlignment.RIGHT);
-
+            lab.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            
             TextField text = new TextField(mod.getReference());
             referencesPane.getChildren().add(text);
             text.setLayoutY(currHeight);
-            text.setLayoutX(lab.getLayoutX() + 50);
-            text.setPrefWidth(100);
+            text.setLayoutX(lab.getLayoutX() +  100);
+            text.setPrefWidth(Region.USE_COMPUTED_SIZE);
             text.setOnKeyReleased(value -> {
                 mod.setReference(text.getText());
             });
@@ -487,8 +493,11 @@ public class SquidParametersManagerGUIController implements Initializable {
                 BigDecimal oneSigmaABS, BigDecimal oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new TextField(value.toPlainString());
+            this.value.setPrefWidth(Region.USE_COMPUTED_SIZE);
             this.oneSigmaABS = new TextField(oneSigmaABS.toPlainString());
+            this.oneSigmaABS.setPrefWidth(Region.USE_COMPUTED_SIZE);
             this.oneSigmaPCT = new TextField(oneSigmaPCT.toPlainString());
+            this.oneSigmaPCT.setPrefWidth(Region.USE_COMPUTED_SIZE);
         }
 
         public String getName() {

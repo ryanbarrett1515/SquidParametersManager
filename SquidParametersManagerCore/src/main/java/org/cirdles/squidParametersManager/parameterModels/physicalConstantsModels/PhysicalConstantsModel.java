@@ -8,10 +8,13 @@ package org.cirdles.squidParametersManager.parameterModels.physicalConstantsMode
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import org.cirdles.squidParametersManager.ValueModel;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
 import org.cirdles.squidParametersManager.util.XStreamETReduxConverters.ETReduxPhysConstConverter;
+import org.cirdles.squidParametersManager.util.DataDictionary;
 
 /**
  *
@@ -23,8 +26,15 @@ public class PhysicalConstantsModel extends ParametersManager {
 
     public PhysicalConstantsModel() {
         super();
-        molarMasses = new TreeMap<>();
+        molarMasses = new HashMap<>();
         setUpDefaultMolarMasses();
+    }
+
+    public void setUpDefaultMolarMasses() {
+        String[][] masses = DataDictionary.AtomicMolarMasses;
+        for (int i = 0; i < masses.length; i++) {
+            molarMasses.put(masses[i][0], new BigDecimal(masses[i][1]));
+        }
     }
 
     public Map<String, BigDecimal> getMolarMasses() {
@@ -33,18 +43,6 @@ public class PhysicalConstantsModel extends ParametersManager {
 
     public void setMolarMasses(Map<String, BigDecimal> molarMasses) {
         this.molarMasses = molarMasses;
-    }
-
-    public void setUpDefaultMolarMasses() {
-        molarMasses.put("gmol204", new BigDecimal("203.973028"));
-        molarMasses.put("gmol205", new BigDecimal("204.9737"));
-        molarMasses.put("gmol206", new BigDecimal("205.974449"));
-        molarMasses.put("gmol207", new BigDecimal("206.975880"));
-        molarMasses.put("gmol208", new BigDecimal("207.976636"));
-        molarMasses.put("gmol230", new BigDecimal("230.033128"));
-        molarMasses.put("gmol232", new BigDecimal("232.038051"));
-        molarMasses.put("gmol235", new BigDecimal("235.043922"));
-        molarMasses.put("gmol238", new BigDecimal("238.050785"));
     }
 
     public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(String input) {
@@ -64,6 +62,23 @@ public class PhysicalConstantsModel extends ParametersManager {
         xstream.registerConverter(new ETReduxPhysConstConverter());
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
+    }
+
+    @Override
+    public final void initializeNewRatiosAndRhos() {
+
+        this.values = new ValueModel[DataDictionary.MeasuredConstants.length];
+        for (int i = 0; i < DataDictionary.MeasuredConstants.length; i++) {
+            this.values[i]
+                    = new ValueModel(
+                            DataDictionary.MeasuredConstants[i][0],
+                            "PCT", "", BigDecimal.ZERO, BigDecimal.ZERO);
+        }
+
+        Arrays.sort(values, new DataValueModelNameComparator());
+
+        buildRhosMap();
+
     }
 
 }
