@@ -23,7 +23,7 @@ package org.cirdles.squidParametersManager.util;
  * @author James F. Bowring
  */
 
-public enum MineralStandardUPbRatiosEnum {
+public enum ReferenceMaterialEnum {
     /**
      * 
      */// MineralStandard ratios
@@ -49,7 +49,7 @@ public enum MineralStandardUPbRatiosEnum {
     r238_235s( "r238_235s" );
     private String name;
 
-    private MineralStandardUPbRatiosEnum ( String name ) {
+    private ReferenceMaterialEnum ( String name ) {
         this.name = name;
     }
 
@@ -66,9 +66,9 @@ public enum MineralStandardUPbRatiosEnum {
      * @return
      */
     public static String[] getNames () {
-        String[] retVal = new String[MineralStandardUPbRatiosEnum.values().length];
-        for (int i = 0; i < MineralStandardUPbRatiosEnum.values().length; i ++) {
-            retVal[i] = MineralStandardUPbRatiosEnum.values()[i].getName();
+        String[] retVal = new String[ReferenceMaterialEnum.values().length];
+        for (int i = 0; i < ReferenceMaterialEnum.values().length; i ++) {
+            retVal[i] = ReferenceMaterialEnum.values()[i].getName();
         }
         return retVal;
     }
@@ -81,7 +81,7 @@ public enum MineralStandardUPbRatiosEnum {
     public static boolean contains ( String checkString ) {
         boolean retVal = true;
         try {
-            MineralStandardUPbRatiosEnum.valueOf( checkString );
+            ReferenceMaterialEnum.valueOf( checkString );
         } catch (IllegalArgumentException e) {
             retVal = false;
         }

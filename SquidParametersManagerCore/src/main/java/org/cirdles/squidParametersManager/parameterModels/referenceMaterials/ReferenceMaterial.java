@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import org.cirdles.squidParametersManager.ValueModel;
 import org.cirdles.squidParametersManager.parameterModels.ParametersManager;
-import org.cirdles.squidParametersManager.util.MineralStandardUPbRatiosEnum;
+import org.cirdles.squidParametersManager.util.ReferenceMaterialEnum;
 import org.cirdles.squidParametersManager.util.XStreamETReduxConverters.ETReduxRefMatConverter;
 
 /**
@@ -33,7 +33,7 @@ public class ReferenceMaterial extends ParametersManager {
     @Override
     public final void initializeNewRatiosAndRhos() {
         ArrayList<ValueModel> holdRatios = new ArrayList<>();
-        for (MineralStandardUPbRatiosEnum value : MineralStandardUPbRatiosEnum.values()) {
+        for (ReferenceMaterialEnum value : ReferenceMaterialEnum.values()) {
             holdRatios.add( //
                     new ValueModel(value.getName(),
                             "ABS", BigDecimal.ZERO,
