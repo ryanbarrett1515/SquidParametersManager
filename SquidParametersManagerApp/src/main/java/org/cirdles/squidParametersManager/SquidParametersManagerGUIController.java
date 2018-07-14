@@ -26,7 +26,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -163,7 +162,7 @@ public class SquidParametersManagerGUIController implements Initializable {
 
         File physConstFile = new File("src/main/resources/org/cirdles/squidParametersManager/EARTHTIME Physical Constants Model v.1.1.xml");
         physConstModel = PhysicalConstantsModel.getPhysicalConstantsModelFromETReduxXML(physConstFile);
-//        setUpPhysConstCovariancesAndCorrelations();
+        setUpPhysConstCovariancesAndCorrelations();
         physConstModels = new ArrayList<>();
         physConstModels.add(physConstModel);
         setUpPhysConstCB();
@@ -176,27 +175,33 @@ public class SquidParametersManagerGUIController implements Initializable {
         setUpRefMatCB();
         setUpLaboratoryName();
     }
-    
+
     private void setUpPhysConstCovariancesAndCorrelations() {
-        physConstModel.initializeNewRatiosAndRhos();
-        String[] rowNames = new String[physConstModel.getValues().length];
-        for(int i = 0; i < rowNames.length; i++) {
-            rowNames[i] = physConstModel.getValues()[i].getName();
+//        physConstModel.initializeNewRatiosAndRhos();
+        Iterator<Entry<String, BigDecimal>> rowIterator = physConstModel.getRhos().entrySet().iterator();
+        String[] rowNames = new String[physConstModel.getRhos().entrySet().size()];
+        for (int i = 0; i < rowNames.length; i++) {
+            rowNames[i] = rowIterator.next().getKey();
         }
         physConstModel.getCorrModel().setRows(rowNames);
         physConstModel.getCorrModel().setCols(physConstModel.getCorrModel().getRows());
+        physConstModel.getCorrModel().initializeMatrix();
+        physConstModel.getCovModel().initializeMatrixModelFromMatrixModel(physConstModel.getCorrModel());
         physConstModel.getCorrModel().initializeCorrelations(physConstModel.getRhos());
         physConstModel.generateCovariancesFromCorrelations();
     }
-    
+
     private void setUpRefMatCovariancesAndCorrelations() {
-        refMatModel.initializeNewRatiosAndRhos();
-        String[] rowNames = new String[refMatModel.getValues().length];
-        for(int i = 0; i < rowNames.length; i++) {
-            rowNames[i] = refMatModel.getValues()[i].getName();
+//        refMatModel.initializeNewRatiosAndRhos();
+        Iterator<Entry<String, BigDecimal>> rowIterator = refMatModel.getRhos().entrySet().iterator();
+        String[] rowNames = new String[refMatModel.getRhos().entrySet().size()];
+        for (int i = 0; i < rowNames.length; i++) {
+            rowNames[i] = rowIterator.next().getKey();
         }
         refMatModel.getCorrModel().setRows(rowNames);
         refMatModel.getCorrModel().setCols(refMatModel.getCorrModel().getRows());
+        refMatModel.getCorrModel().initializeMatrix();
+        refMatModel.getCovModel().initializeMatrixModelFromMatrixModel(refMatModel.getCorrModel());
         refMatModel.getCorrModel().initializeCorrelations(refMatModel.getRhos());
         refMatModel.generateCovariancesFromCorrelations();
     }
@@ -432,11 +437,11 @@ public class SquidParametersManagerGUIController implements Initializable {
             lab.setLayoutX(10);
             lab.setTextAlignment(TextAlignment.RIGHT);
             lab.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            
+
             TextField text = new TextField(mod.getReference());
             referencesPane.getChildren().add(text);
             text.setLayoutY(currHeight);
-            text.setLayoutX(lab.getLayoutX() +  100);
+            text.setLayoutX(lab.getLayoutX() + 100);
             text.setPrefWidth(Region.USE_COMPUTED_SIZE);
             text.setOnKeyReleased(value -> {
                 mod.setReference(text.getText());
